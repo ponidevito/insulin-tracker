@@ -25,17 +25,38 @@ const INSULIN_TYPES = {
 
 const pendingInjections = new Map();
 
+function loadServiceAccount() {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    try {
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
+      if (serviceAccount.private_key) {
+        serviceAccount.private_key = serviceAccount.private_key.replace(/\\n/g, "\n");
+      }
+
+      return serviceAccount;
+    } catch (error) {
+      console.error("FIREBASE_SERVICE_ACCOUNT must be valid JSON.");
+      process.exit(1);
+    }
+  }
+
+  if (!fs.existsSync(FIREBASE_KEY_PATH)) {
+    console.error(
+      "Firebase credentials are missing. Add FIREBASE_SERVICE_ACCOUNT env variable or firebase-key.json file."
+    );
+    process.exit(1);
+  }
+
+  return require(FIREBASE_KEY_PATH);
+}
+
 if (!process.env.BOT_TOKEN) {
   console.error("BOT_TOKEN is missing. Add it to your .env file.");
   process.exit(1);
 }
 
-if (!fs.existsSync(FIREBASE_KEY_PATH)) {
-  console.error("firebase-key.json is missing. Add Firebase service account key to the project root.");
-  process.exit(1);
-}
-
-const serviceAccount = require(FIREBASE_KEY_PATH);
+const serviceAccount = loadServiceAccount();
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),

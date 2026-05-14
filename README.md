@@ -24,7 +24,7 @@ npm install
 BOT_TOKEN=your_telegram_bot_token
 ```
 
-3. Add Firebase service account file to the project root:
+3. Add Firebase service account file to the project root for local development:
 
 ```text
 firebase-key.json
@@ -41,3 +41,12 @@ npm start
 - Do not commit `.env` or Firebase service account files.
 - Run only one bot instance when using Telegram long polling.
 - For hosting, use a background worker process with `npm start`.
+- Set these environment variables on your hosting provider:
+
+```env
+BOT_TOKEN=your_telegram_bot_token
+FIREBASE_SERVICE_ACCOUNT={"type":"service_account",...}
+NODE_ENV=production
+```
+
+`FIREBASE_SERVICE_ACCOUNT` should contain the full Firebase service account JSON.

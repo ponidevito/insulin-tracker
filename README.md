@@ -50,3 +50,10 @@ NODE_ENV=production
 ```
 
 `FIREBASE_SERVICE_ACCOUNT` should contain the full Firebase service account JSON.
+
+## Railway
+
+1. Create a new Railway project from this GitHub repository.
+2. Add variables from `.env.example`.
+3. Deploy the service.
+4. Check logs for `Bot started`.
